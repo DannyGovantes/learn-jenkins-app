@@ -26,8 +26,8 @@ pipeline {
       steps{
         sh '''
           echo "Test stage"
-
-          [ -f "/build/index.html" ] && echo "File exists" || echo "File does not exists"
+          test -f build/index.html
+          # [ -f "build/index.html" ] && echo "File exists" || echo "File does not exists"
 
           npm test
         '''
