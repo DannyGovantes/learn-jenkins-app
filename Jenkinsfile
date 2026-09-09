@@ -62,6 +62,10 @@ pipeline {
                 reuseNode true
               }
             }
+            environment{
+
+               CI_ENVIRONMENT_URL= "https://celebrated-peony-9ffb30.netlify.app"
+            }
 
             steps{
 
@@ -75,13 +79,12 @@ pipeline {
             post {
               always {
               
-                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Local Report', reportTitles: '', useWrapperFileDirectly: true])
               }
             }
         }
      }
-      
-    }
+  }
 
     stage('Deploy'){
 
@@ -102,7 +105,26 @@ pipeline {
         '''
       }
     }
+    stage('Prod E2E'){
+      agent {
+        docker {
+          image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+          reuseNode true
+        }
+      }
 
+      steps{
+
+        sh'''
+            npx playwright test --reporter=html
+        '''
+      }
+      post {
+        always {
+        
+          publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'E2E Report', reportTitles: '', useWrapperFileDirectly: true])
+        }
+      }
+    }
   }
-
-}
+} 
