@@ -62,10 +62,6 @@ pipeline {
                 reuseNode true
               }
             }
-            environment{
-
-               CI_ENVIRONMENT_URL= "https://celebrated-peony-9ffb30.netlify.app"
-            }
 
             steps{
 
@@ -111,6 +107,10 @@ pipeline {
           image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
           reuseNode true
         }
+      }
+      environment{
+        
+        CI_ENVIRONMENT_URL= "https://celebrated-peony-9ffb30.netlify.app"
       }
 
       steps{
